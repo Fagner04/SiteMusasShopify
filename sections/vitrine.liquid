@@ -29,15 +29,27 @@
             </div>
             <div class="vitrine-card-info">
               <p class="vitrine-card-name">{{ product.title | upcase }}</p>
-              <p class="vitrine-card-price">R$ {{ product.price_min | money_without_currency }}</p>
-              {% if section.settings.show_frete %}
-                <p class="vitrine-card-frete">Frete Grátis ⚡</p>
-              {% endif %}
-              {% if section.settings.show_parcelas %}
-                <p class="vitrine-card-parcelas">6x de R$ {{ product.price_min | divided_by: 6 | money_without_currency }} <span>sem juros</span></p>
-              {% endif %}
               {%- if product.metafields.custom.wholesale_price -%}
-                <p class="vitrine-card-atacado">Atacado: <strong>R$ {{ product.metafields.custom.wholesale_price.value }}</strong>{%- if product.metafields.custom.wholesale_min_qty -%} (mín. {{ product.metafields.custom.wholesale_min_qty.value }} un.){%- endif -%}</p>
+                <div class="price-comparison-layout" style="margin-top:0.3rem;">
+                  <div class="price-column varejo-column">
+                    <span class="price-label">VAREJO</span>
+                    <span class="price-value" style="font-size:0.95rem;">R$ {{ product.price_min | money_without_currency }}</span>
+                  </div>
+                  <div class="price-column atacado-column">
+                    <span class="price-label">ATACADO</span>
+                    <span class="price-value atacado-price" style="font-size:0.95rem;">R$ {{ product.metafields.custom.wholesale_price.value }}</span>
+                  </div>
+                </div>
+                <p class="pix-price" style="margin-top:0.25rem;">ou R$ {{ product.price_min | times: 0.95 | money_without_currency }} no PIX</p>
+                <p class="installments" style="margin-top:0.2rem;">6x de R$ {{ product.price_min | divided_by: 6 | money_without_currency }} SEM JUROS</p>
+              {%- else -%}
+                <p class="vitrine-card-price">R$ {{ product.price_min | money_without_currency }}</p>
+                {% if section.settings.show_frete %}
+                  <p class="vitrine-card-frete">Frete Grátis ⚡</p>
+                {% endif %}
+                {% if section.settings.show_parcelas %}
+                  <p class="vitrine-card-parcelas">6x de R$ {{ product.price_min | divided_by: 6 | money_without_currency }} <span>sem juros</span></p>
+                {% endif %}
               {%- endif -%}
               <p class="vitrine-card-status">
                 <span class="vitrine-dot {% unless product.available %}vitrine-dot-off{% endunless %}"></span>
