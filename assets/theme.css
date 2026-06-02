@@ -286,9 +286,9 @@ input, textarea, select { font-size: 16px; font-family: inherit; }
 .varejo-column { padding-right: 0.75rem; border-right: 1.5px solid var(--border); }
 .atacado-column { padding-left: 0.75rem; }
 .price-label { display: block; font-size: 0.6rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted-foreground); margin-bottom: 0.1rem; }
-.atacado-column .price-label { color: var(--brand-purple, #7c3aed); }
-.price-value { display: block; font-size: 1rem; font-weight: 800; color: var(--foreground); line-height: 1.1; }
-.atacado-price { color: var(--brand-purple, #7c3aed) !important; }
+.atacado-column .price-label { color: #7c3aed; }
+.price-value { display: block; font-size: 1rem; font-weight: 800; color: #18181b; line-height: 1.1; }
+.atacado-price { color: #7c3aed !important; }
 .price-details { display: flex; flex-direction: column; gap: 0.15rem; }
 .pix-price { font-size: 0.72rem; color: var(--brand-green, #16a34a); font-weight: 600; margin: 0; }
 .installments { font-size: 0.72rem; color: var(--muted-foreground); margin: 0; display: flex; align-items: center; gap: 0.3rem; }
