@@ -470,6 +470,15 @@
     if (!inv || !inv.management || inv.policy === 'continue') return 99;
     if (!inv.qty || inv.qty <= 0) return 99;
 
+    // Força atualização do carrinho se _lastCartItems não existe ou está vazio
+    if (!window._lastCartItems) {
+      // Busca o carrinho de forma síncrona usando uma Promise resolvida
+      window._lastCartItems = [];
+      fetch('/cart.js').then(function(r){ return r.json(); }).then(function(cart){
+        window._lastCartItems = cart.items || [];
+      }).catch(function(){});
+    }
+
     // Quanto o próprio cliente já tem no carrinho
     var ownQty = 0;
     try {
@@ -484,25 +493,33 @@
 
     // Máximo que ainda pode adicionar = estoque - reservado por outros - já no carrinho
     var canStillAdd = inv.qty - lockedByOthers - ownQty;
-    return canStillAdd; // pode ser 0 ou negativo — changeQty trata isso
+    return Math.max(0, canStillAdd); // garante que nunca seja negativo
   }
 
   function changeQty(delta) {
     var max = getMaxQty();
     var qtyRow = document.querySelector('.product-qty-row');
 
+    // Sempre mantém o seletor de quantidade visível
+    if (qtyRow) qtyRow.style.display = '';
+
+    // Se não há estoque disponível, limita a 1 mas mantém o seletor visível
     if (max <= 0) {
-      if (qtyRow) qtyRow.style.display = 'none';
       qty = 1;
       var inp = document.getElementById('qty-input');
       if (inp) inp.value = 1;
+      var disp = document.getElementById('qty-display');
+      if (disp) disp.textContent = qty;
+      var btnMinus = document.querySelector('.product-qty-row .cart-qty button:first-child');
+      var btnPlus = document.querySelector('.product-qty-row .cart-qty button:last-child');
+      if (btnMinus) btnMinus.disabled = qty <= 1;
+      if (btnPlus) btnPlus.disabled = true; // Desabilita o + quando não há estoque
       return;
     }
 
     // Limita max a 99 para evitar valores absurdos quando sem controle de estoque
     var effectiveMax = Math.min(max, 99);
 
-    if (qtyRow) qtyRow.style.display = '';
     qty = Math.min(effectiveMax, Math.max(1, qty + delta));
     var disp = document.getElementById('qty-display');
     var inp2 = document.getElementById('qty-input');

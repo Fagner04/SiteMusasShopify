@@ -329,10 +329,16 @@ async function renderCart() {
   const footer = document.getElementById('cart-footer');
   const badge = document.getElementById('cart-count');
   if (badge) { badge.textContent = cart.item_count; badge.style.display = cart.item_count > 0 ? 'flex' : 'none'; }
+  
+  // Atualiza cache do carrinho para product pages
+  window._lastCartItems = cart.items || [];
   if (cart.item_count === 0) {
     empty.style.display = 'flex'; footer.style.display = 'none';
     list.querySelectorAll('.cart-item').forEach(i => i.remove());
     clearCartReserve();
+    // Atualiza cache do carrinho e força atualização dos seletores nas páginas de produto
+    window._lastCartItems = cart.items || [];
+    if (typeof changeQty === 'function') changeQty(0);
     return;
   }
   empty.style.display = 'none'; footer.style.display = 'block';
@@ -457,6 +463,9 @@ async function renderCart() {
 
   document.getElementById('cart-total-price').textContent = formatMoney(cart.total_price);
   await renderWholesaleProgress(cart);
+  
+  // Atualiza seletores de quantidade nas páginas de produto após mudanças no carrinho
+  if (typeof changeQty === 'function') changeQty(0);
 }
 
 
