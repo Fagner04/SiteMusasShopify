@@ -516,6 +516,9 @@ async function changeItemLine(line, qty) {
       }
     }
     await renderCart();
+    
+    // Força atualização dos botões nas páginas de produto após mudança no carrinho
+    notifyCartChange();
   } finally {
     _cartInteracting = false;
   }
@@ -841,3 +844,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
 });
 
+
+// Função para notificar mudanças no carrinho para páginas de produto
+function notifyCartChange() {
+  // Dispara evento customizado para páginas de produto escutarem
+  try {
+    window.dispatchEvent(new CustomEvent('cartChanged'));
+  } catch(e) {}
+  
+  // Fallback: chama função direta se existe
+  if (typeof window.updateProductPageStock === 'function') {
+    window.updateProductPageStock();
+  }
+}

@@ -216,7 +216,7 @@
           {%- endif -%}
         </div>
 
-        <form action="/cart/add" method="post" id="product-form">
+        <form action="{{ routes.cart_add_url }}" method="post" id="product-form">
           <input type="hidden" name="id" id="variant-id" value="{{ product.selected_or_first_available_variant.id }}">
 
           <!-- Options -->
@@ -841,38 +841,54 @@
         var addBtn = document.getElementById('add-to-cart-btn');
         var ownQty = ownCart[String(currentVariant.id)] || 0;
         if (addBtn && addBtn.textContent !== 'Adicionando...' && addBtn.textContent !== 'Verificando estoque...') {
-          if (inv && inv.management && inv.policy !== 'continue' && inv.qty > 0) {
-            var lockedByOthers = Math.max(0, locked - ownQty);
-            var realQty = inv.qty - lockedByOthers;
-            if (!currentVariant.available || realQty <= 0) {
-              addBtn.disabled = true;
-              addBtn.textContent = ownQty >= inv.qty
-                ? '🛒 Você já adicionou todo o estoque disponível'
-                : (lockedByOthers > 0 ? '🔒 Outro cliente reservou — aguarde' : 'Esgotado');
-            } else if (lockedByOthers > 0) {
-              addBtn.disabled = false;
-              addBtn.textContent = 'Adicionar ao Carrinho';
-              // Mostra aviso personalizado com quantidade já no carrinho
-              var estoqueAviso = document.getElementById('estoque-aviso');
-              if (!estoqueAviso) {
-                estoqueAviso = document.createElement('p');
-                estoqueAviso.id = 'estoque-aviso';
-                estoqueAviso.style.cssText = 'color:#C2410C;font-size:0.78rem;font-weight:600;margin-top:0.4rem;text-align:center;';
-                addBtn.parentNode.insertBefore(estoqueAviso, addBtn.nextSibling);
-              }
-              var noCarrinho = ownQty > 0
-                ? 'Você já reservou ' + ownQty + ' unidade(s) no carrinho.'
-                : '⚠️ Restam apenas ' + realQty + ' unidade(s) em estoque!';
-              estoqueAviso.textContent = noCarrinho;
-            } else {
-              addBtn.disabled = false;
-              addBtn.textContent = 'Adicionar ao Carrinho';
-              var estoqueAviso = document.getElementById('estoque-aviso');
-              if (estoqueAviso) estoqueAviso.remove();
-            }
-          } else if (!currentVariant.available) {
+          // Primeiro verifica se a variante está disponível no Shopify
+          if (!currentVariant.available) {
             addBtn.disabled = true;
             addBtn.textContent = 'Esgotado';
+            var estoqueAviso = document.getElementById('estoque-aviso');
+            if (estoqueAviso) estoqueAviso.remove();
+          } else if (inv && inv.management && inv.policy !== 'continue' && inv.qty > 0) {
+            // Controle de estoque ativo
+            var lockedByOthers = Math.max(0, locked - ownQty);
+            var realQty = inv.qty - lockedByOthers;
+            
+            if (realQty <= 0) {
+              addBtn.disabled = true;
+              if (ownQty >= inv.qty) {
+                addBtn.textContent = '🛒 Você já adicionou todo o estoque disponível';
+              } else if (lockedByOthers > 0) {
+                addBtn.textContent = '🔒 Outro cliente reservou — aguarde';
+              } else {
+                addBtn.textContent = 'Esgotado';
+              }
+            } else {
+              // Produto disponível
+              addBtn.disabled = false;
+              addBtn.textContent = 'Adicionar ao Carrinho';
+              
+              if (lockedByOthers > 0 || ownQty > 0) {
+                // Mostra aviso personalizado com quantidade já no carrinho
+                var estoqueAviso = document.getElementById('estoque-aviso');
+                if (!estoqueAviso) {
+                  estoqueAviso = document.createElement('p');
+                  estoqueAviso.id = 'estoque-aviso';
+                  estoqueAviso.style.cssText = 'color:#C2410C;font-size:0.78rem;font-weight:600;margin-top:0.4rem;text-align:center;';
+                  addBtn.parentNode.insertBefore(estoqueAviso, addBtn.nextSibling);
+                }
+                var noCarrinho = ownQty > 0
+                  ? 'Você já reservou ' + ownQty + ' unidade(s) no carrinho.'
+                  : '⚠️ Restam apenas ' + realQty + ' unidade(s) em estoque!';
+                estoqueAviso.textContent = noCarrinho;
+              } else {
+                // Remove aviso quando não há restrições
+                var estoqueAviso = document.getElementById('estoque-aviso');
+                if (estoqueAviso) estoqueAviso.remove();
+              }
+            }
+          } else {
+            // Sem controle de estoque ou estoque ilimitado
+            addBtn.disabled = false;
+            addBtn.textContent = 'Adicionar ao Carrinho';
             var estoqueAviso = document.getElementById('estoque-aviso');
             if (estoqueAviso) estoqueAviso.remove();
           }
@@ -889,7 +905,7 @@
     function fetchAndApplyLocks() {
       var apiKey = (window.__cwStockAPI && window.__cwStockAPI.key) || '';
       var url    = (window.__cwStockAPI && window.__cwStockAPI.url) || '';
-      if (!apiKey || !url) return;
+      
       // Invalida cache do theme.js para garantir dados frescos
       if (window._stockLockCache) {
         variantIds.forEach(function(id) {
@@ -897,25 +913,47 @@
           if (window._stockLockCacheTime) delete window._stockLockCacheTime[id];
         });
       }
-      // Busca locks e carrinho em paralelo
-      Promise.all([
-        fetch(url + '?variant_ids=' + variantIds.join(','), { headers: { 'x-api-key': apiKey } }).then(function(r) { return r.json(); }),
-        fetch('/cart.js').then(function(r) { return r.json(); })
-      ])
-      .then(function(results) {
-        var data = results[0];
-        var cart = results[1];
-        if (!data || !data.locks) return;
-        // Salva itens do carrinho para uso no getMaxQty
-        window._lastCartItems = cart.items || [];
-        _cwLocks = {};
-        window._cwLocks = _cwLocks;
-        Object.keys(data.locks).forEach(function(id) {
-          if (data.locks[id].locked) _cwLocks[id] = data.locks[id].locked_quantity || 0;
+      
+      // Sempre busca o carrinho atualizado, mesmo sem API de locks
+      fetch('/cart.js')
+        .then(function(r) { return r.json(); })
+        .then(function(cart) {
+          // Salva itens do carrinho para uso no getMaxQty
+          window._lastCartItems = cart.items || [];
+          
+          if (!apiKey || !url) {
+            // Sem API de locks, apenas atualiza com base no carrinho
+            applyLocks(cart.items || []);
+            return;
+          }
+          
+          // Com API de locks, busca dados de reserva
+          fetch(url + '?variant_ids=' + variantIds.join(','), { headers: { 'x-api-key': apiKey } })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+              if (!data || !data.locks) {
+                applyLocks(cart.items || []);
+                return;
+              }
+              
+              // Reseta locks antes de aplicar novos dados
+              _cwLocks = {};
+              window._cwLocks = _cwLocks;
+              
+              Object.keys(data.locks).forEach(function(id) {
+                if (data.locks[id].locked) _cwLocks[id] = data.locks[id].locked_quantity || 0;
+              });
+              
+              applyLocks(cart.items || []);
+            })
+            .catch(function() {
+              // Em caso de erro na API de locks, usa apenas dados do carrinho
+              applyLocks(cart.items || []);
+            });
+        })
+        .catch(function() {
+          console.error('[product] Erro ao buscar carrinho');
         });
-        applyLocks(cart.items || []);
-      })
-      .catch(function() {});
     }
 
     // Carga inicial
@@ -923,6 +961,15 @@
 
     // Polling a cada 3s — garante atualização mesmo sem Realtime
     setInterval(fetchAndApplyLocks, 3000);
+
+    // Escuta mudanças no carrinho para atualização imediata
+    window.addEventListener('cartChanged', function() {
+      console.log('[product] Carrinho alterado, atualizando stock...');
+      setTimeout(fetchAndApplyLocks, 100); // Pequeno delay para garantir que a API foi atualizada
+    });
+
+    // Função global para ser chamada pelo theme.js
+    window.updateProductPageStock = fetchAndApplyLocks;
 
     // Supabase Realtime — atualização instantânea (complementar ao polling)
     function initRealtime() {
