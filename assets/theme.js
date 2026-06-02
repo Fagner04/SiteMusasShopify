@@ -714,7 +714,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (stock.locked && stock.available > 0) {
               btn.textContent = 'Apenas ' + stock.available + ' dispon├¡vel(is)';
             } else if (stock.locked) {
-              btn.textContent = '­ƒöÆ Outro cliente reservou ÔÇö aguarde';
+              btn.textContent = '🔒 Outro cliente reservou — aguarde';
             } else {
               btn.textContent = 'Esgotado';
             }
@@ -735,7 +735,7 @@ document.addEventListener('DOMContentLoaded', function() {
           btn.disabled = false;
           var lockData2 = _stockLockCache[String(variantId)];
           var hasOtherLock = lockData2 && lockData2.locked && (lockData2.locked_quantity || 0) > inCart;
-          btn.textContent = hasOtherLock ? '­ƒöÆ Outro cliente reservou ÔÇö aguarde' : '­ƒøÆ Voc├¬ j├í adicionou todo o estoque dispon├¡vel';
+          btn.textContent = hasOtherLock ? '🔒 Outro cliente reservou — aguarde' : '🛒 Você já adicionou todo o estoque disponível';
           setTimeout(() => { btn.textContent = 'Adicionar ao Carrinho'; btn.disabled = false; }, 3000);
           openCart();
           return;
