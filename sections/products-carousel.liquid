@@ -74,16 +74,9 @@
                       <p class="installments">6x de {{ product.price | divided_by: 6 | money }} SEM JUROS</p>
                     </div>
                   {%- else -%}
-                    <div class="carousel-price-row" style="margin-top:0.4rem;">
-                      <span class="carousel-price-pix">{% render 'pix-icon', size: '14' %}{{ product.price | times: 0.95 | money }}</span>
-                      <span class="carousel-pix-badge">5%</span>
-                    </div>
-                    <div class="carousel-price-row" style="margin-top:0.25rem;">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-                      <span class="carousel-price-full">{{ product.price | money }}</span>
-                      <span class="carousel-avista-badge">A VISTA</span>
-                    </div>
-                    <p class="carousel-installments">ou 6x de {{ product.price | divided_by: 6 | money }} sem juros</p>
+                    <p class="pix-price" style="margin-top:0.4rem;">ou {{ product.price | times: 0.95 | money }} no PIX</p>
+                    <p class="price-value" style="font-size:0.95rem;font-weight:800;color:#18181b;margin:0.1rem 0;">{{ product.price | money }}</p>
+                    <p class="installments">6x de {{ product.price | divided_by: 6 | money }} SEM JUROS</p>
                   {%- endif -%}
                 </div>
               </div>
@@ -121,16 +114,9 @@
                           <p class="installments">6x de {{ product.price | divided_by: 6 | money }} SEM JUROS</p>
                         </div>
                       {%- else -%}
-                        <div class="carousel-price-row">
-                          <span class="carousel-price-pix">{% render 'pix-icon', size: '14' %}{{ product.price | times: 0.95 | money }}</span>
-                          <span class="carousel-pix-badge">5%</span>
-                        </div>
-                        <div class="carousel-price-row" style="margin-top:0.25rem;">
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-                          <span class="carousel-price-full">{{ product.price | money }}</span>
-                          <span class="carousel-avista-badge">A VISTA</span>
-                        </div>
-                        <p class="carousel-installments">ou 6x de {{ product.price | divided_by: 6 | money }} sem juros</p>
+                        <p class="pix-price" style="margin-top:0.4rem;">ou {{ product.price | times: 0.95 | money }} no PIX</p>
+                        <p class="price-value" style="font-size:0.95rem;font-weight:800;color:#18181b;margin:0.1rem 0;">{{ product.price | money }}</p>
+                        <p class="installments">6x de {{ product.price | divided_by: 6 | money }} SEM JUROS</p>
                       {%- endif -%}
                     </div>
                   </div>
