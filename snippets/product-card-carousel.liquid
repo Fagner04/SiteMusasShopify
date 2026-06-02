@@ -15,6 +15,7 @@
   <div class="carousel-card-info">
     <h3>{{ product.title | upcase }}</h3>
     {%- if product.metafields.custom.wholesale_price -%}
+      {%- assign ws_price = product.metafields.custom.wholesale_price.value | times: 100 | round -%}
       <div class="price-comparison-layout" style="margin-top:0.4rem;">
         <div class="price-column varejo-column">
           <span class="price-label">VAREJO</span>
@@ -22,7 +23,7 @@
         </div>
         <div class="price-column atacado-column">
           <span class="price-label">ATACADO</span>
-          <span class="price-value atacado-price" style="font-size:0.9rem;">{{ product.metafields.custom.wholesale_price.value | money }}</span>
+          <span class="price-value atacado-price" style="font-size:0.9rem;">{{ ws_price | money }}</span>
         </div>
       </div>
       <div class="price-details" style="margin-top:0.3rem;">
