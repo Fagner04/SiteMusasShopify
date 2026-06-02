@@ -539,7 +539,9 @@ async function getWholesalePrice(handle) {
     // Normaliza para centavos: se < 1000 assume reais (ex: 159.90), sen├úo j├í ├® centavos
     var raw = data.wholesale_price;
     if (raw !== null && raw !== undefined) {
-      _wsCache[handle] = raw < 1000 ? Math.round(raw * 100) : Math.round(raw);
+      // Valor vem como string de reais ex: "79.95" — converte para centavos
+      var num = parseFloat(raw);
+      _wsCache[handle] = isNaN(num) ? null : Math.round(num * 100);
     } else {
       _wsCache[handle] = null;
     }

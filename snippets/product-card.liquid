@@ -31,7 +31,7 @@
     <!-- Layout de preços lado a lado -->
     <div class="product-card-prices">
       {%- if card_product.metafields.custom.wholesale_price -%}
-        {%- assign ws_price = card_product.metafields.custom.wholesale_price.value | times: 100 | round -%}
+        {%- assign ws_price = card_product.metafields.custom.wholesale_price.value -%}
         <div class="price-comparison-layout">
           <div class="price-column varejo-column">
             <span class="price-label">VAREJO</span>
@@ -39,7 +39,7 @@
           </div>
           <div class="price-column atacado-column">
             <span class="price-label">ATACADO</span>
-            <span class="price-value atacado-price">{{ ws_price | money }}</span>
+            <span class="price-value atacado-price">R$ {{ ws_price }}</span>
           </div>
         </div>
         <div class="price-details">
