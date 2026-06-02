@@ -37,7 +37,7 @@
                 <p class="vitrine-card-parcelas">6x de R$ {{ product.price_min | divided_by: 6 | money_without_currency }} <span>sem juros</span></p>
               {% endif %}
               {%- if product.metafields.custom.wholesale_price -%}
-                <p class="vitrine-card-atacado">Atacado: <strong>{{ product.metafields.custom.wholesale_price.value | money }}</strong>{%- if product.metafields.custom.wholesale_min_qty -%} (mín. {{ product.metafields.custom.wholesale_min_qty.value }} un.){%- endif -%}</p>
+                <p class="vitrine-card-atacado">Atacado: <strong>R$ {{ product.metafields.custom.wholesale_price.value }}</strong>{%- if product.metafields.custom.wholesale_min_qty -%} (mín. {{ product.metafields.custom.wholesale_min_qty.value }} un.){%- endif -%}</p>
               {%- endif -%}
               <p class="vitrine-card-status">
                 <span class="vitrine-dot {% unless product.available %}vitrine-dot-off{% endunless %}"></span>
