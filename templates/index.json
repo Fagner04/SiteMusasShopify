@@ -238,6 +238,13 @@
     "products_carousel_Lfhr8p": {
       "type": "products-carousel",
       "blocks": {
+        "category_htd6yM": {
+          "type": "category",
+          "settings": {
+            "label": "ULTIMAS NOVIDADES",
+            "collection": "ultimas-novidades"
+          }
+        },
         "category_HYzNAh": {
           "type": "category",
           "settings": {
@@ -282,6 +289,7 @@
         }
       },
       "block_order": [
+        "category_htd6yM",
         "category_HYzNAh",
         "category_byFAkG",
         "category_gyByde",
