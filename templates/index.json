@@ -68,6 +68,13 @@
     "collections_carousel_qrWhkd": {
       "type": "collections-carousel",
       "blocks": {
+        "collection_item_fHtf3R": {
+          "type": "collection_item",
+          "settings": {
+            "collection": "",
+            "label": "E O PODER"
+          }
+        },
         "collection_item_BkdQUy": {
           "type": "collection_item",
           "settings": {
@@ -126,6 +133,7 @@
         }
       },
       "block_order": [
+        "collection_item_fHtf3R",
         "collection_item_BkdQUy",
         "collection_item_nfiKxV",
         "collection_item_RJBU4G",
