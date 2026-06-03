@@ -245,6 +245,13 @@
             "collection": "e-o-poder"
           }
         },
+        "category_byFAkG": {
+          "type": "category",
+          "settings": {
+            "label": "MUSAS BRASIL",
+            "collection": "musas-brasil-1"
+          }
+        },
         "category_gyByde": {
           "type": "category",
           "settings": {
@@ -276,6 +283,7 @@
       },
       "block_order": [
         "category_HYzNAh",
+        "category_byFAkG",
         "category_gyByde",
         "category_YAQ7Jj",
         "category_HGHQbT",
