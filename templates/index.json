@@ -238,6 +238,20 @@
     "products_carousel_Lfhr8p": {
       "type": "products-carousel",
       "blocks": {
+        "category_HYzNAh": {
+          "type": "category",
+          "settings": {
+            "label": "Categoria",
+            "collection": "e-o-poder"
+          }
+        },
+        "category_gyByde": {
+          "type": "category",
+          "settings": {
+            "label": "BLUSAS",
+            "collection": "blusa"
+          }
+        },
         "category_YAQ7Jj": {
           "type": "category",
           "settings": {
@@ -261,6 +275,8 @@
         }
       },
       "block_order": [
+        "category_HYzNAh",
+        "category_gyByde",
         "category_YAQ7Jj",
         "category_HGHQbT",
         "category_n7Eebx"
