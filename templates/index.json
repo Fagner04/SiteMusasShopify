@@ -325,8 +325,8 @@
         "products_count": 15,
         "show_frete": false,
         "show_parcelas": true,
-        "accent_color": "#ffffff",
-        "bg_color": "#a73a3b",
+        "accent_color": "#fe7e41",
+        "bg_color": "#fafafa",
         "padding_top": 48,
         "padding_bottom": 48
       }
