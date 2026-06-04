@@ -61,9 +61,9 @@
           "logo": "shopify://shop_images/Musas_club_2.png",
           "menu": "menu",
           "menu_mobile": "main-menu",
-          "nav_hover_color": "#28060a",
-          "nav_active_color": "#330406",
-          "nav_active_underline": "#26060c",
+          "nav_hover_color": "#fe7e41",
+          "nav_active_color": "#fe7e41",
+          "nav_active_underline": "#fe7e41",
           "account_login_url": "https://www.conectwhats.com/portal/musasclub"
         }
       },
