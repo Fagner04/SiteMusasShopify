@@ -25,26 +25,10 @@
             "cta2_text": "VER TODAS AS COLEÇOES",
             "cta2_link": "shopify://collections/all"
           }
-        },
-        "slide_Awni3z": {
-          "type": "slide",
-          "disabled": true,
-          "settings": {
-            "image": "shopify://shop_images/Banner_Promocao_De_Doces_Confeitaria_Rosa.png",
-            "image_mobile": "shopify://shop_images/Gemini_Generated_Image_i572bei572bei572.png",
-            "tagline": "",
-            "title": "",
-            "subtitle": "",
-            "cta_text": "Ver Colecao",
-            "cta_link": "",
-            "cta2_text": "ATACADO",
-            "cta2_link": ""
-          }
         }
       },
       "block_order": [
-        "slide_bLq7G3",
-        "slide_Awni3z"
+        "slide_bLq7G3"
       ],
       "settings": {
         "margin_top_extra": -18,
