@@ -71,8 +71,9 @@
         "collection_item_fHtf3R": {
           "type": "collection_item",
           "settings": {
-            "collection": "",
-            "label": "E O PODER"
+            "collection": "e-o-poder",
+            "label": "É O PODER",
+            "image": "shopify://shop_images/F40D0985-B9EA-4004-A4CC-2EE416B4809E_JPG.jpg"
           }
         },
         "collection_item_BkdQUy": {
