@@ -336,61 +336,6 @@
     },
     "178113026044959632": {
       "type": "apps",
-      "blocks": {
-        "frete_no_produto_estimate_delivery_UJmiFq": {
-          "type": "shopify://apps/frete-no-produto/blocks/estimate_delivery/86063d43-a133-4046-bbed-b9bfb712ccba",
-          "settings": {
-            "estimate_enabled": true,
-            "estimate_text": "Chegará entre DATE_FROM e DATE_TO",
-            "disclaimer_text": "Confirme o prazo de entrega antes de finalizar o pedido.",
-            "days_from": 3,
-            "days_to": 7,
-            "business_days": true,
-            "date_format": "dd_month_abbr",
-            "show_icon": true,
-            "icon_color": "#666666",
-            "text_color": "#333333",
-            "highlight_color": "#2e7d32",
-            "background_color": "#f5f5f5",
-            "font_family": "assistant_n4",
-            "font_size": 14,
-            "padding": 12,
-            "border_radius": 6,
-            "text_align": "left"
-          }
-        },
-        "frete_no_produto_shipping_calc_YG3Atb": {
-          "type": "shopify://apps/frete-no-produto/blocks/shipping_calc/86063d43-a133-4046-bbed-b9bfb712ccba",
-          "settings": {
-            "shipping_calculator": true,
-            "show_localization": true,
-            "background_color_container": "transparent",
-            "background_header": "#fafafa",
-            "background_local": "#fafafa",
-            "btnshipping": "#000000",
-            "color_text": "#ffffff",
-            "color_shipping": "#51a559",
-            "color_ship_name": "#000000",
-            "color_shipping_date": "#000000",
-            "padding_inner": 0,
-            "padding_external": 12,
-            "space_top": 0,
-            "height_input": 45,
-            "border_radius": 6,
-            "text_btn": "CONSULTAR",
-            "text_title": "Calcule o Frete",
-            "placeholder": "Digite seu CEP",
-            "pickup": "",
-            "dont_show_products": [],
-            "show_dont_know_cep": false,
-            "dont_know_cep_text": "Não sei meu CEP"
-          }
-        }
-      },
-      "block_order": [
-        "frete_no_produto_estimate_delivery_UJmiFq",
-        "frete_no_produto_shipping_calc_YG3Atb"
-      ],
       "settings": {}
     }
   },
