@@ -73,84 +73,70 @@
 </head>
 <body>
 
-<!-- THEME ACTIVATION GATE -->
-{% assign _tk = settings.theme_activation_token | strip %}
-{% if _tk != blank %}
+<!-- THEME ACTIVATION GATE — ConectWhats Anti-Pirataria -->
 <script>
 (function(){
-  var KEY='_theme_activated';
-  var API='https://conectwhats.vercel.app/api/activate';
-  var STORED_TOKEN={{ _tk | json }};
+  var SUPABASE_URL = 'https://kgjtweydkggbbfncnpxc.supabase.co';
+  var API = SUPABASE_URL + '/functions/v1/activate-theme';
+  var TOKEN = {{ settings.theme_activation_token | default: '' | strip | json }};
+  var CACHE_KEY = '_cw_lic';
+  var CACHE_TTL = 86400000; // 24h em ms
 
-  if(localStorage.getItem(KEY)==='1'){return;}
+  // Sem token configurado — não bloqueia (ambiente de desenvolvimento)
+  if (!TOKEN || TOKEN === '') return;
 
-  // Verifica o token das settings automaticamente
-  fetch(API,{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({token:STORED_TOKEN,domain:location.hostname})
-  }).then(function(r){return r.json();}).then(function(d){
-    if(d.ok||d.domain_active){
-      localStorage.setItem(KEY,'1');
+  // Verifica cache válido
+  try {
+    var cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
+    if (cached && cached.valid && (Date.now() - cached.ts) < CACHE_TTL) return;
+  } catch(e) {}
+
+  // Chama API de validação
+  fetch(API, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token: TOKEN, domain: window.location.hostname })
+  })
+  .then(function(r) { return r.json().then(function(d) { return { status: r.status, data: d }; }); })
+  .then(function(res) {
+    if (res.data && res.data.valid) {
+      // Token válido — salva cache
+      try { localStorage.setItem(CACHE_KEY, JSON.stringify({ valid: true, ts: Date.now() })); } catch(e) {}
+    } else {
+      // Token inválido ou pirataria — bloqueia
+      _cwBlock(res.data && res.data.error ? res.data.error : 'Licença inválida.');
     }
-  }).catch(function(){});
+  })
+  .catch(function() {
+    // Erro de rede — não bloqueia para evitar falso positivo
+  });
+
+  function _cwBlock(msg) {
+    // Bloqueia scroll
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+
+    var gate = document.createElement('div');
+    gate.id = '_cw_gate';
+    gate.style.cssText = 'position:fixed;inset:0;background:rgba(10,10,10,0.97);z-index:2147483647;display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;';
+    gate.innerHTML = '<div style="background:#fff;border-radius:1.25rem;padding:2.5rem 2rem;max-width:400px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.4);text-align:center;">'
+      + '<div style="width:56px;height:56px;background:#fef2f2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;font-size:1.75rem;">🔒</div>'
+      + '<h2 style="font-size:1.15rem;font-weight:700;color:#18181b;margin:0 0 .5rem;">Tema não licenciado</h2>'
+      + '<p style="color:#71717a;font-size:.85rem;margin:0 0 1rem;line-height:1.5;">' + _cwEsc(msg) + '</p>'
+      + '<p style="color:#a1a1aa;font-size:.75rem;margin:0;background:#f4f4f5;border-radius:.5rem;padding:.6rem .75rem;">Para obter uma licença, entre em contato com o desenvolvedor do tema.</p>'
+      + '</div>';
+    document.body.appendChild(gate);
+
+    // Remove conteúdo do body para não ficar acessível via DevTools
+    var main = document.getElementById('main-content');
+    if (main) main.innerHTML = '';
+  }
+
+  function _cwEsc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
 })();
 </script>
-{% else %}
-<div id="_ag" style="display:none;position:fixed;inset:0;background:#f4f4f5;z-index:99999;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;">
-  <div id="_af" style="background:#fff;border-radius:1.25rem;padding:2.5rem 2rem;max-width:420px;width:90%;box-shadow:0 8px 40px rgba(0,0,0,.12);text-align:center;">
-    <div style="font-size:2.5rem;margin-bottom:1rem;">🔑</div>
-    <h2 style="font-size:1.25rem;font-weight:700;margin-bottom:.5rem;color:#18181b;">Theme Activation Required</h2>
-    <p style="color:#52525b;font-size:.875rem;margin-bottom:1.5rem;">Enter your activation token to unlock this theme.</p>
-    <input id="_at" type="text" placeholder="Paste your activation token..." autocomplete="off" spellcheck="false"
-      style="width:100%;padding:.8rem 1rem;border:2px solid #d4d4d8;border-radius:.75rem;font-size:.9rem;outline:none;text-align:center;box-sizing:border-box;margin-bottom:.75rem;">
-    <button id="_ab" onclick="_av()"
-      style="width:100%;padding:.85rem;background:#fe7e41;color:#fff;border:none;border-radius:9999px;font-size:.9rem;font-weight:600;cursor:pointer;">
-      Activate Theme
-    </button>
-    <p id="_ae" style="display:none;margin-top:.7rem;color:#ef4444;font-size:.8rem;background:#fef2f2;border-radius:.5rem;padding:.5rem .75rem;"></p>
-  </div>
-  <div id="_as" style="display:none;background:#fff;border-radius:1.25rem;padding:2.5rem 2rem;max-width:420px;width:90%;box-shadow:0 8px 40px rgba(0,0,0,.12);text-align:center;border-top:4px solid #22c55e;">
-    <div style="font-size:3rem;margin-bottom:1rem;">🎉</div>
-    <h2 style="font-size:1.25rem;font-weight:700;margin-bottom:.5rem;color:#18181b;">Parabéns! Tema Ativado!</h2>
-    <p style="color:#52525b;font-size:.875rem;margin-bottom:1.5rem;">Seu tema está online e pronto para uso.</p>
-    <button onclick="_ac()"
-      style="width:100%;padding:.85rem;background:#22c55e;color:#fff;border:none;border-radius:9999px;font-size:.9rem;font-weight:600;cursor:pointer;">
-      Acessar minha loja →
-    </button>
-  </div>
-</div>
-<script>
-(function(){
-  var KEY='_theme_activated';
-  var API='https://conectwhats.vercel.app/api/activate';
-  if(localStorage.getItem(KEY)==='1'){return;}
-  var gate=document.getElementById('_ag');
-  gate.style.display='flex';
-  document.body.style.overflow='hidden';
-  window._av=async function(){
-    var t=document.getElementById('_at').value.trim();
-    var b=document.getElementById('_ab');
-    var e=document.getElementById('_ae');
-    if(!t){_showErr('Please enter your activation token.');return;}
-    b.disabled=true;b.textContent='Activating...';e.style.display='none';
-    try{
-      var r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:t,domain:location.hostname})});
-      var d=await r.json();
-      if(!r.ok){_showErr(d.error||'Invalid token.');return;}
-      localStorage.setItem(KEY,'1');
-      document.getElementById('_af').style.display='none';
-      document.getElementById('_as').style.display='block';
-      setTimeout(function(){gate.style.display='none';document.body.style.overflow='';},3000);
-    }catch(x){_showErr('Connection error. Please try again.');}
-    finally{b.disabled=false;b.textContent='Activate Theme';}
-  };
-  function _showErr(m){var e=document.getElementById('_ae');e.textContent=m;e.style.display='block';document.getElementById('_ab').disabled=false;document.getElementById('_ab').textContent='Activate Theme';}
-  window._ac=function(){gate.style.display='none';document.body.style.overflow='';};
-  document.getElementById('_at').addEventListener('keydown',function(e){if(e.key==='Enter')_av();});
-})();
-</script>
-{% endif %}
 <!-- END ACTIVATION GATE -->
 
   {% section 'header' %}
