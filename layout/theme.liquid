@@ -1,4 +1,12 @@
 <!doctype html>
+  <!--
+  ╔══════════════════════════════════════════════════════════╗
+  ║         Desenvolvido por Fagner Dev                      ║
+  ║         https://fagner-dev.vercel.app                    ║
+  ║         © 2026 Todos os direitos reservados              ║
+  ║         Uso não autorizado é proibido por lei            ║
+  ╚══════════════════════════════════════════════════════════╝
+  -->
   <link rel="shortcut icon" href="https://cdn.shopify.com/s/files/1/0792/8335/5885/files/image_645d5837.png?v=1781359891" />
 
 <html lang="{{ request.locale.iso_code }}">
@@ -82,8 +90,8 @@
   var CACHE_KEY = '_cw_lic';
   var CACHE_TTL = 86400000; // 24h em ms
 
-  // Sem token configurado — não bloqueia (ambiente de desenvolvimento)
-  if (!TOKEN || TOKEN === '') return;
+  // Sem token configurado — bloqueia (tema não licenciado)
+  if (!TOKEN || TOKEN === '') { _cwBlock('Token de ativação não configurado.'); return; }
 
   // Verifica cache válido
   try {
